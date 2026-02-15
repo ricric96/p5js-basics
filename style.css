@@ -1,8 +1,48 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #f0f0f0;
+#app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+#ui-panel {
+  width: 250px;
+  background: #fff;
+  border-right: 1px solid #ccc;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+#canvas-container {
+  flex-grow: 1;
+  position: relative;
+  background: #fdfdfd;
+}
+
+.control-group {
+  margin-bottom: 20px;
+}
+
+.control-group h3 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  color: #666;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-family: sans-serif;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+input[type="range"] {
+  width: 100%;
+  display: block;
+  margin-top: 4px;
 }
 
 canvas {

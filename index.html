@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,39 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
 </head>
+
 <body>
-    <main>
-    </main>
+    <div id="app">
+        <aside id="ui-panel">
+            <section class="control-group">
+                <h3>Effetto Fusione</h3>
+                <label>Blur: <input type="range" id="inputBlur" min="0" max="30" value="8"></label>
+                <label>Threshold: <input type="range" id="inputThreshold" min="0" max="1" step="0.01"
+                        value="0.5"></label>
+            </section>
+
+            <section class="control-group">
+                <h3>Geometria</h3>
+                <label>Spessore: <input type="range" id="inputStroke" min="1" max="20" value="5"></label>
+                <label>Spaziatura: <input type="range" id="inputGap" min="5" max="100" value="25"></label>
+                <label>Numero Cerchi: <input type="range" id="inputCircles" min="1" max="50" value="15"></label>
+                <label>Jitter: <input type="range" id="inputJitter" min="0" max="10" value="1"></label>
+            </section>
+
+            <section class="control-group">
+                <h3>Posizione Fulcri</h3>
+                <label>F1 X: <input type="range" id="inputF1X" min="0" max="100" value="40"></label>
+                <label>F1 Y: <input type="range" id="inputF1Y" min="0" max="100" value="40"></label>
+                <label>F2 X: <input type="range" id="inputF2X" min="0" max="100" value="60"></label>
+                <label>F2 Y: <input type="range" id="inputF2Y" min="0" max="100" value="60"></label>
+            </section>
+        </aside>
+
+        <main id="canvas-container">
+            <!-- p5.js canvas will be here -->
+        </main>
+    </div>
     <script src="sketch.js"></script>
 </body>
+
 </html>
