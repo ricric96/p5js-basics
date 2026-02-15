@@ -2,70 +2,112 @@ let pg;
 let vertexCount = 100;
 
 function setup() {
-  // Posizioniamo il canvas nel container specifico
-  let canvas = createCanvas(windowWidth - 250, windowHeight);
+  let w = parseInt(document.getElementById('inputWidth').value);
+  let h = parseInt(document.getElementById('inputHeight').value);
+
+  // Renderer standard (estremamente stabile)
+  let canvas = createCanvas(w, h);
   canvas.parent('canvas-container');
 
-  pg = createGraphics(width, height);
+  pg = createGraphics(w, h);
+
+  // Listener ridimensionamento manuale
+  document.getElementById('btnResize').addEventListener('click', () => {
+    let newW = parseInt(document.getElementById('inputWidth').value);
+    let newH = parseInt(document.getElementById('inputHeight').value);
+    resizeCanvas(newW, newH);
+    pg = createGraphics(newW, newH);
+  });
+
+  // Listener PNG
+  document.getElementById('btnSavePNG').addEventListener('click', () => {
+    saveCanvas('mio_pattern', 'png');
+  });
 }
 
 function draw() {
   background(255);
 
-  // Leggiamo i valori direttamente dagli elementi HTML
-  let blurVal = parseFloat(document.getElementById('inputBlur').value);
-  let thresholdVal = parseFloat(document.getElementById('inputThreshold').value);
-  let strokeVal = parseFloat(document.getElementById('inputStroke').value);
-  let gapVal = parseFloat(document.getElementById('inputGap').value);
-  let countVal = parseInt(document.getElementById('inputCircles').value);
-  let jitterVal = parseFloat(document.getElementById('inputJitter').value);
-
-  // Calcoliamo le posizioni dei fulcri basate sulla percentuale (slider 0-100)
-  let f1x = (parseFloat(document.getElementById('inputF1X').value) / 100) * width;
-  let f1y = (parseFloat(document.getElementById('inputF1Y').value) / 100) * height;
-  let f2x = (parseFloat(document.getElementById('inputF2X').value) / 100) * width;
-  let f2y = (parseFloat(document.getElementById('inputF2Y').value) / 100) * height;
+  const params = getParams();
 
   // --- Disegno sul Buffer ---
   pg.background(255);
   pg.noFill();
   pg.stroke(0);
-  pg.strokeWeight(strokeVal);
+  pg.strokeWeight(params.stroke);
 
-  for (let i = 1; i <= countVal; i++) {
-    let radius = i * gapVal;
-    drawCircleToBuffer(pg, f1x, f1y, radius, vertexCount, jitterVal);
-    drawCircleToBuffer(pg, f2x, f2y, radius, vertexCount, jitterVal);
-  }
+  drawPattern(pg, params);
 
   // --- Applicazione Filtri ---
-  if (blurVal > 0) pg.filter(BLUR, blurVal);
-  pg.filter(THRESHOLD, thresholdVal);
+  if (params.blur > 0) pg.filter(BLUR, params.blur);
+  pg.filter(THRESHOLD, params.threshold);
+
+  // --- Ricolorazione Pixel ---
+  pg.loadPixels();
+  let c = color(params.color);
+  let r = red(c), g = green(c), b = blue(c);
+
+  // Ottimizzazione: ricoloriamo solo se non è nero
+  if (r !== 0 || g !== 0 || b !== 0) {
+    for (let i = 0; i < pg.pixels.length; i += 4) {
+      if (pg.pixels[i] < 128) {
+        pg.pixels[i] = r;
+        pg.pixels[i + 1] = g;
+        pg.pixels[i + 2] = b;
+      }
+    }
+    pg.updatePixels();
+  }
 
   // Visualizzazione
   image(pg, 0, 0);
 
-  // Centri
-  fill(0);
+  // Centri (disegnati sopra)
+  fill(params.color);
   noStroke();
-  ellipse(f1x, f1y, 5, 5);
-  ellipse(f2x, f2y, 5, 5);
+  ellipse(params.f1x, params.f1y, 5, 5);
+  ellipse(params.f2x, params.f2y, 5, 5);
 }
 
-function drawCircleToBuffer(buffer, x, y, r, res, jitter) {
+function getParams() {
+  const getById = (id) => document.getElementById(id);
+  return {
+    blur: parseFloat(getById('inputBlur').value),
+    threshold: parseFloat(getById('inputThreshold').value),
+    stroke: parseFloat(getById('inputStroke').value),
+    gap: parseFloat(getById('inputGap').value),
+    count: parseInt(getById('inputCircles').value),
+    jitter: parseFloat(getById('inputJitter').value),
+    oval: parseFloat(getById('inputOval').value),
+    color: getById('inputColor').value,
+    f1x: parseFloat(getById('inputF1X').value),
+    f1y: parseFloat(getById('inputF1Y').value),
+    f2x: parseFloat(getById('inputF2X').value),
+    f2y: parseFloat(getById('inputF2Y').value)
+  };
+}
+
+function drawPattern(target, p) {
+  for (let i = 1; i <= p.count; i++) {
+    let radius = i * p.gap;
+    drawCircleShape(target, p.f1x, p.f1y, radius, vertexCount, p.jitter, p.oval);
+    drawCircleShape(target, p.f2x, p.f2y, radius, vertexCount, p.jitter, p.oval);
+  }
+}
+
+function drawCircleShape(buffer, x, y, r, res, jitter, oval) {
   buffer.beginShape();
   for (let i = 0; i < res; i++) {
     let angle = map(i, 0, res, 0, TWO_PI);
     let currentR = r + random(-jitter, jitter);
     let vx = x + cos(angle) * currentR;
-    let vy = y + sin(angle) * currentR;
+    let vy = y + sin(angle) * currentR * oval;
     buffer.vertex(vx, vy);
   }
   buffer.endShape(CLOSE);
 }
 
 function windowResized() {
-  // Sottraiamo la larghezza del pannello laterale (250px)
   resizeCanvas(windowWidth - 250, windowHeight);
   pg = createGraphics(width, height);
 }

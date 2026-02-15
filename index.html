@@ -13,26 +13,41 @@
     <div id="app">
         <aside id="ui-panel">
             <section class="control-group">
+                <h3>Aspetto e Tela</h3>
+                <label>Larghezza Canvas: <input type="number" id="inputWidth" value="800" min="100"></label>
+                <label>Altezza Canvas: <input type="number" id="inputHeight" value="600" min="100"></label>
+                <label>Colore Linea (HEX): <input type="color" id="inputColor" value="#000000"></label>
+                <button id="btnResize">Applica Dimensioni</button>
+                <div class="export-buttons">
+                    <button id="btnSavePNG">Salva PNG</button>
+                </div>
+            </section>
+
+            <section class="control-group">
                 <h3>Effetto Fusione</h3>
-                <label>Blur: <input type="range" id="inputBlur" min="0" max="30" value="8"></label>
+                <label>Blur: <input type="range" id="inputBlur" min="0" max="30" value="10"></label>
                 <label>Threshold: <input type="range" id="inputThreshold" min="0" max="1" step="0.01"
                         value="0.5"></label>
             </section>
 
             <section class="control-group">
                 <h3>Geometria</h3>
-                <label>Spessore: <input type="range" id="inputStroke" min="1" max="20" value="5"></label>
-                <label>Spaziatura: <input type="range" id="inputGap" min="5" max="100" value="25"></label>
-                <label>Numero Cerchi: <input type="range" id="inputCircles" min="1" max="50" value="15"></label>
-                <label>Jitter: <input type="range" id="inputJitter" min="0" max="10" value="1"></label>
+                <label>Spessore: <input type="number" id="inputStroke" min="1" max="100" value="15"></label>
+                <label>Spaziatura: <input type="range" id="inputGap" min="5" max="200" value="25"></label>
+                <label>Ovalità: <input type="range" id="inputOval" min="0.2" max="5" step="0.1" value="1"></label>
+                <label>Numero Cerchi: <input type="range" id="inputCircles" min="1" max="80" value="15"></label>
+                <label>Jitter: <input type="range" id="inputJitter" min="0" max="20" value="1"></label>
             </section>
 
             <section class="control-group">
-                <h3>Posizione Fulcri</h3>
-                <label>F1 X: <input type="range" id="inputF1X" min="0" max="100" value="40"></label>
-                <label>F1 Y: <input type="range" id="inputF1Y" min="0" max="100" value="40"></label>
-                <label>F2 X: <input type="range" id="inputF2X" min="0" max="100" value="60"></label>
-                <label>F2 Y: <input type="range" id="inputF2Y" min="0" max="100" value="60"></label>
+                <h3>Posizione Fulcri (Pixel)</h3>
+                <div class="pixel-inputs">
+                    <label>F1 X: <input type="number" id="inputF1X" value="300"></label>
+                    <label>F1 Y: <input type="number" id="inputF1Y" value="300"></label>
+                    <hr>
+                    <label>F2 X: <input type="number" id="inputF2X" value="500"></label>
+                    <label>F2 Y: <input type="number" id="inputF2Y" value="500"></label>
+                </div>
             </section>
         </aside>
 
