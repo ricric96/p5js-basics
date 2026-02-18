@@ -12,16 +12,18 @@ function setup() {
   pg = createGraphics(w, h);
 
   // Listener ridimensionamento manuale
-  document.getElementById('btnResize').addEventListener('click', () => {
+  select('#btnResize').mousePressed(() => {
     let newW = parseInt(document.getElementById('inputWidth').value);
     let newH = parseInt(document.getElementById('inputHeight').value);
     resizeCanvas(newW, newH);
     pg = createGraphics(newW, newH);
+    console.log("Canvas ridimensionato:", newW, "x", newH);
   });
 
-  // Listener PNG
-  document.getElementById('btnSavePNG').addEventListener('click', () => {
-    saveCanvas('mio_pattern', 'png');
+  // Listener PNG - Fix estensione: salvataggio diretto dal buffer grafico
+  select('#btnSavePNG').mousePressed(() => {
+    console.log("Salvataggio in corso: pattern.png");
+    pg.save('pattern.png');
   });
 }
 
@@ -47,7 +49,6 @@ function draw() {
   let c = color(params.color);
   let r = red(c), g = green(c), b = blue(c);
 
-  // Ottimizzazione: ricoloriamo solo se non è nero
   if (r !== 0 || g !== 0 || b !== 0) {
     for (let i = 0; i < pg.pixels.length; i += 4) {
       if (pg.pixels[i] < 128) {
@@ -62,7 +63,7 @@ function draw() {
   // Visualizzazione
   image(pg, 0, 0);
 
-  // Centri (disegnati sopra)
+  // Centri
   fill(params.color);
   noStroke();
   ellipse(params.f1x, params.f1y, 5, 5);
@@ -105,9 +106,4 @@ function drawCircleShape(buffer, x, y, r, res, jitter, oval) {
     buffer.vertex(vx, vy);
   }
   buffer.endShape(CLOSE);
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth - 250, windowHeight);
-  pg = createGraphics(width, height);
 }
